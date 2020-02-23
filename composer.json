@@ -1,0 +1,20 @@
+{
+  "name": "akpro/case-studies",
+  "description": "AKPRO Case Studies",
+  "require": {
+    "jjgrainger/posttypes": "^2.0",
+    "micropackage/dochooks": "^1.0",
+    "micropackage/requirements": "^1.0",
+    "stoutlogic/acf-builder": "^1.9"
+  },
+  "license": "GPL3",
+  "authors": [ {
+    "name": "Piotr Konicki",
+    "email": "piotr@akprostudio.pl"
+  } ],
+  "autoload": {
+    "psr-4": {
+      "AKPRO\\CaseStudies\\" : "inc"
+    }
+  }
+}
