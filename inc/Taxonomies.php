@@ -34,18 +34,20 @@ class Taxonomies {
 		foreach($terms as $term) {
 			$wp_term = get_term_by( 'name', $term['name'], $taxonomy );
 			if($wp_term === false) {
-				$wp_term = self::create_term($term['name'], $taxonomy);
+				$term_id = self::create_term($term['name'], $taxonomy);
+			} else {
+				$term_id = $wp_term->term_id;
 			}
-			$terms_array[] = $wp_term->term_id;
+			$terms_array[] = $term_id;
 		}
 
-		return wp_set_object_terms( $post_id, $terms_array, $taxonomy, true );
+		wp_set_object_terms( $post_id, $terms_array, $taxonomy, true );
 	}
 
 	public static function create_term( $term, $taxonomy ) {
-		$term_id = wp_insert_term( $term, $taxonomy );
-		update_term_meta( $term_id, 'crm_term_id', $term['id'] );
+		$term = wp_insert_term( $term, $taxonomy );
+		update_term_meta( $term['term_id'], 'crm_term_id', $term['id'] );
 
-		return $term_id;
+		return $term['term_id'];
 	}
 }

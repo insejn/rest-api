@@ -34,8 +34,8 @@ if ( ! $requirements->satisfied() ) {
 	return;
 }
 
-$post_type = new AKPRO\CaseStudies\PostType();
 $taxonomies = new AKPRO\CaseStudies\Taxonomies();
+$post_type = new AKPRO\CaseStudies\PostType();
 $fields = new AKPRO\CaseStudies\Fields();
 $fields->add_hooks();
 $api = new AKPRO\CaseStudies\RestApi();
