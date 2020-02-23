@@ -14,7 +14,7 @@ class PostType {
 		]);
 
 		$case_study->register();
-
+		$case_study->options(['supports' => ['title', 'editor', 'thumbnail']]);
 		$case_study->taxonomy( 'kategoria_realizacji' );
 		$case_study->taxonomy( 'tag_realizacji' );
 	}

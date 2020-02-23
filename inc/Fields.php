@@ -62,6 +62,9 @@ class Fields extends HookAnnotations {
 			}
 		}
 		update_field( $field_name, $gallery_array, $post_id );
+		if(!empty($gallery_array)) {
+			set_post_thumbnail( $post_id, $gallery_array[0] );
+		}
 	}
 
 	public static function image_exists( $crm_id ) {

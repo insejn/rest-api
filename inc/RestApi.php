@@ -172,16 +172,16 @@ class RestApi extends HookAnnotations {
 			return $error;
 		}
 
-		// $user_can_publish_post = user_can( $user_id,'publish_posts' );
-		// if ( ! $user_can_publish_post ) {
-		// 	$error->add(
-		// 		400,
-		// 		__( "Nie masz uprawnień", 'rest-api-endpoints' ),
-		// 		array( 'status' => 400 )
-		// 	);
+		$user_can_publish_post = user_can( $user_id, 'publish_posts' );
+		if ( ! $user_can_publish_post ) {
+			$error->add(
+				400,
+				__( "Nie masz uprawnień", 'rest-api-endpoints' ),
+				array( 'status' => 400 )
+			);
 
-		// 	return $error;
-		// }
+			return $error;
+		}
 
 		$post_id = Manager::update( $params );
 
