@@ -37,8 +37,8 @@ class Fields extends HookAnnotations {
 		$gallery_parsed = [];
 		foreach($gallery as $img) {
 			$gallery_parsed[] = [
-				'id'	=> get_post_meta( $img, 'crm_image_id', true),
-				'link' => wp_get_attachment_url( $img ),
+				'id'	=> get_post_meta( $img['ID'], 'crm_image_id', true),
+				'link' => wp_get_attachment_url( $img['ID'] ),
 			];
 		}
 
@@ -51,8 +51,8 @@ class Fields extends HookAnnotations {
 		$gallery_ids = get_field( $field_name, $post_id );
 
 		foreach( $data as $image ) {
-			if(self::image_exists( $image['id'] ) ) {
-				$gallery_array[] = $image['id'];
+			if( $imgid = self::image_exists( $image['id'] ) ) {
+				$gallery_array[] = $imgid;
 			} else {
 				$id = self::upload_image( $image['link'] );
 				if(! is_wp_error( $id ) ) {
@@ -76,7 +76,7 @@ class Fields extends HookAnnotations {
 			)
 		);
 		$query = new \WP_Query($args);
-		return ($query->post_count > 0) ? true : false;
+		return ($query->post_count > 0) ? $query->posts[0]->ID : false;
 	}
 
 	public static function upload_image($url) {

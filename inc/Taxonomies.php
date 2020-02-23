@@ -21,27 +21,29 @@ class Taxonomies {
 		$case_study_tag->register();
 	}
 	public static function get_tags( $post_id ) {
-		wp_get_post_terms( $post_id, 'tag_realizacji' );
+		return wp_get_post_terms( $post_id, 'tag_realizacji' );
 
 	}
 
 	public static function get_category( $post_id ) {
-		wp_get_post_terms( $post_id, 'kategoria_realizacji' );
+		return wp_get_post_terms( $post_id, 'kategoria_realizacji' );
 	}
 
-	public static function set_category() {
-		term_exists( $term, $taxonomy = '' );
-
-	}
-
-	public static function set_tags($terms) {
+	public static function set_terms( $post_id, $terms, $taxonomy ) {
+		$terms_array = [];
 		foreach($terms as $term) {
-
+			$wp_term = get_term_by( 'name', $term['name'], $taxonomy );
+			if($wp_term === false) {
+				$wp_term = self::create_term($term['name'], $taxonomy);
+			}
+			$terms_array[] = $wp_term->term_id;
 		}
+
+		return wp_set_object_terms( $post_id, $terms_array, $taxonomy, true );
 	}
 
 	public static function create_term( $term, $taxonomy ) {
-		$term_id = wp_insert_term( $term['name'], $taxonomy );
+		$term_id = wp_insert_term( $term, $taxonomy );
 		update_term_meta( $term_id, 'crm_term_id', $term['id'] );
 
 		return $term_id;
