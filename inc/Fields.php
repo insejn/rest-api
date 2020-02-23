@@ -37,7 +37,7 @@ class Fields extends HookAnnotations {
 		$gallery_parsed = [];
 		foreach($gallery as $img) {
 			$gallery_parsed[] = [
-				'id'	=> get_post_meta( 'crm_image_id', $img, true),
+				'id'	=> get_post_meta( $img, 'crm_image_id', true),
 				'link' => wp_get_attachment_url( $img ),
 			];
 		}

@@ -27,7 +27,7 @@ class Manager {
 	public static function insert( $request ) {
 		$post_id = wp_insert_post([
 			'post_type' => 'case_study',
-			'post_title' => sanitize_title($request['nazwa']),
+			'post_title' => $request['nazwa'],
 			'post_content' => $request['opis'],
 			'post_status'	=> ($request['aktywny']) ? 'publish' : 'draft',
 		]);
@@ -45,7 +45,7 @@ class Manager {
 		$post_id = wp_update_post([
 			'ID'		=> $request['wp_id'],
 			'post_type' => 'case_study',
-			'post_title' => sanitize_title($request['nazwa']),
+			'post_title' => $request['nazwa'],
 			'post_content' => $request['opis'],
 			'post_status'	=> ($request['aktywny']) ? 'publish' : 'draft',
 		]);
@@ -67,18 +67,18 @@ class Manager {
 			'opis'                     => $post->post_content,
 			'zdjecia'                  => Fields::get_gallery( $post->ID ),
 			'zakres_prac'              => get_field( 'zakres_prac', $post->ID ),
-			'parametry_ekranow'        => get_field('parametry_ekranow'),
-			'tagi'                     => Taxonomies::get_tags(),
-			'kategoria_realizacji'     => Taxonomies::get_category(),
+			'parametry_ekranow'        => get_field( 'parametry_ekranow', $post->ID ),
+			'tagi'                     => Taxonomies::get_tags( $post->ID ),
+			'kategoria_realizacji'     => Taxonomies::get_category( $post->ID ),
 			'aktywny'                  => ($post->post_status === 'publish') ? true : false,
 			'wyrozniony'               => is_sticky( $post->ID ),
 			'zmodyfikowany'            => $post->post_modified,
-			"film"                     => get_field('film', $post->ID),
-			"data_realizacji"          => get_field('data_realizacji', $post->ID),
-			'miejsce_wykonania'        => get_field('miejsce_wykonania', $post->ID),
-			'nazwa_klienta'            => get_field('nazwa_klienta', $post->ID),
-			'imieinazwisko_referencje' => get_field('imienazwisko_referencje', $post->ID),
-			"cytat_referencje"         => get_field('cytat_referencje', $post->ID)
+			"film"                     => get_field( 'film', $post->ID ),
+			"data_realizacji"          => get_field( 'data_realizacji', $post->ID ),
+			'miejsce_wykonania'        => get_field('miejsce_wykonania', $post->ID ),
+			'nazwa_klienta'            => get_field( 'nazwa_klienta', $post->ID ),
+			'imieinazwisko_referencje' => get_field( 'imienazwisko_referencje', $post->ID ),
+			"cytat_referencje"         => get_field( 'cytat_referencje', $post->ID )
 		];
 	}
 
