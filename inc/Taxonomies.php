@@ -20,36 +20,30 @@ class Taxonomies {
 		]);
 		$case_study_tag->register();
 	}
-	public static function get_tags() {
-		// get tags array - slug
-		//crm_id, wp_id, slug, name
+	public static function get_tags( $post_id ) {
+		wp_get_post_terms( $post_id, 'tag_realizacji' );
+
 	}
 
-	public static function get_category() {
-		// get category - crm_id, wp_id, slug, name
+	public static function get_category( $post_id ) {
+		wp_get_post_terms( $post_id, 'kategoria_realizacji' );
 	}
 
 	public static function set_category() {
+		term_exists( $term, $taxonomy = '' );
 
 	}
 
-	public static function set_tags() {
+	public static function set_tags($terms) {
+		foreach($terms as $term) {
 
+		}
 	}
 
-	public static function create_tag( $tag_data ) {
+	public static function create_term( $term, $taxonomy ) {
+		$term_id = wp_insert_term( $term['name'], $taxonomy );
+		update_term_meta( $term_id, 'crm_term_id', $term['id'] );
 
-	}
-
-	public static function create_category( $category_data ) {
-
-	}
-
-	public static function checkIfTagExists( $tag_crm_id ) {
-
-	}
-
-	public static function checkIfCategoryExists( $category_crm_id ) {
-
+		return $term_id;
 	}
 }
