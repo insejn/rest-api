@@ -9,7 +9,7 @@ class RestApi extends HookAnnotations {
 	 * @action rest_api_init
 	 */
 	public function register_get_endpoint() {
-		register_rest_route( 'akpro', '/case-studies/(?P<id>\d+)', array(
+		register_rest_route( 'akpro', '/case-studies/(?P<wp_id>\d+)', array(
 			'methods' => 'GET',
 			'callback' => [$this, 'get_endpoint'],
 		) );
@@ -19,7 +19,7 @@ class RestApi extends HookAnnotations {
 			'callback' => [$this, 'get_all_endpoint'],
 		) );
 
-		register_rest_route( 'akpro', '/case-studies/(?P<id>\d+)', array(
+		register_rest_route( 'akpro', '/case-studies/(?P<wp_id>\d+)', array(
 			'methods' => 'POST',
 			'callback' => [$this, 'update_endpoint'],
 		) );
@@ -51,7 +51,7 @@ class RestApi extends HookAnnotations {
 	public function get_endpoint( $request ) {
 		$response = [];
 
-		$data = Manager::get_one( $request->get_param('id') );
+		$data = Manager::get_one( $request->get_param('wp_id') );
 		$error = new \WP_Error();
 
 		if ( empty( $data ) ) {
@@ -69,7 +69,7 @@ class RestApi extends HookAnnotations {
 		$response = array();
 		$params = $request->get_params();
 
-		$error = new WP_Error();
+		$error = new \WP_Error();
 
 		if ( empty( $params['id'] ) ) {
 			$error->add(
@@ -101,17 +101,17 @@ class RestApi extends HookAnnotations {
 			return $error;
 		}
 
-		// Check if the user with this id can publish posts
-		$user_can_publish_post = user_can( $user_id,'publish_posts' );
-		if ( ! $user_can_publish_post ) {
-			$error->add(
-				400,
-				__( "Nie masz uprawnień", 'rest-api-endpoints' ),
-				array( 'status' => 400 )
-			);
+		// // Check if the user with this id can publish posts
+		// $user_can_publish_post = user_can( $user_id,'publish_posts' );
+		// if ( ! $user_can_publish_post ) {
+		// 	$error->add(
+		// 		400,
+		// 		__( "Nie masz uprawnień", 'rest-api-endpoints' ),
+		// 		array( 'status' => 400 )
+		// 	);
 
-			return $error;
-		}
+		// 	return $error;
+		// }
 
 		$post_id = Manager::insert( $params );
 
@@ -123,14 +123,24 @@ class RestApi extends HookAnnotations {
 			return $error;
 		}
 
-		return new WP_REST_Response( $response );
+		return new \WP_REST_Response( $response );
 	}
 
 	public function update_endpoint( $request ) {
 		$response = array();
 		$params = $request->get_params();
 
-		$error = new WP_Error();
+		$error = new \WP_Error();
+
+		if(! get_post( $params ['wp_id'] ) ) {
+			$error->add(
+				400,
+				__( "Post o podanym ID nie istnieje", 'rest-api-endpoints' ),
+				array( 'status' => 400 )
+			);
+
+			return $error;
+		}
 
 		if ( empty( $params['id'] ) ) {
 			$error->add(
@@ -162,16 +172,16 @@ class RestApi extends HookAnnotations {
 			return $error;
 		}
 
-		$user_can_publish_post = user_can( $user_id,'publish_posts' );
-		if ( ! $user_can_publish_post ) {
-			$error->add(
-				400,
-				__( "Nie masz uprawnień", 'rest-api-endpoints' ),
-				array( 'status' => 400 )
-			);
+		// $user_can_publish_post = user_can( $user_id,'publish_posts' );
+		// if ( ! $user_can_publish_post ) {
+		// 	$error->add(
+		// 		400,
+		// 		__( "Nie masz uprawnień", 'rest-api-endpoints' ),
+		// 		array( 'status' => 400 )
+		// 	);
 
-			return $error;
-		}
+		// 	return $error;
+		// }
 
 		$post_id = Manager::update( $params );
 
@@ -183,6 +193,6 @@ class RestApi extends HookAnnotations {
 			return $error;
 		}
 
-		return new WP_REST_Response( $response );
+		return new \WP_REST_Response( $response );
 	}
 }
