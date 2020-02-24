@@ -60,6 +60,10 @@ class Manager {
 		return $post_id;
 	}
 
+	public static function delete( $id ) {
+		return wp_delete_post( $id, true );
+	}
+
 	public static function translate_post_to_api( $post ) {
 		return [
 			'crm_id'                   => get_field('crm_id', $post->ID),

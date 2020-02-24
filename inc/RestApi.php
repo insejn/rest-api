@@ -28,6 +28,11 @@ class RestApi extends HookAnnotations {
 			'methods' => 'POST',
 			'callback' => [$this, 'insert_endpoint'],
 		) );
+
+		register_rest_route( 'akpro', '/case-studies/(?P<wp_id>\d+)', array(
+			'methods' => 'DELETE',
+			'callback' => [$this, 'delete_endpoint'],
+		) );
 	}
 
 	public function get_all_endpoint( $request ) {
@@ -50,8 +55,9 @@ class RestApi extends HookAnnotations {
 
 	public function get_endpoint( $request ) {
 		$response = [];
+		$params = $request->get_params();
 
-		$data = Manager::get_one( $request->get_param('wp_id') );
+		$data = Manager::get_one( $params['wp_id']);
 		$error = new \WP_Error();
 
 		if ( empty( $data ) ) {
@@ -132,7 +138,7 @@ class RestApi extends HookAnnotations {
 
 		$error = new \WP_Error();
 
-		if(! get_post( $params ['wp_id'] ) ) {
+		if(! get_post( $params['wp_id'] ) ) {
 			$error->add(
 				400,
 				__( "Post o podanym ID nie istnieje", 'rest-api-endpoints' ),
@@ -190,6 +196,38 @@ class RestApi extends HookAnnotations {
 			$response['wp_id'] = $post_id;
 		} else {
 			$error->add( 406, __( 'Post creating failed', 'rest-api-endpoints' ) );
+			return $error;
+		}
+
+		return new \WP_REST_Response( $response );
+	}
+
+	public function delete_endpoint( $request ) {
+		$response = array();
+		$params = $request->get_params();
+
+		$error = new \WP_Error();
+
+		if(! get_post( $params['wp_id'] ) ) {
+			$error->add(
+				400,
+				__( "Post o podanym ID nie istnieje", 'rest-api-endpoints' ),
+				array( 'status' => 400 )
+			);
+
+			return $error;
+		}
+
+		if(Manager::delete( $params['wp_id'] ) ) {
+			$response['data'] = 'Pomyślnie usunięto post.';
+			$response['status'] = 200;
+		} else {
+			$error->add(
+				400,
+				__( "Coś poszło nie tak.", 'rest-api-endpoints' ),
+				array( 'status' => 400 )
+			);
+
 			return $error;
 		}
 
