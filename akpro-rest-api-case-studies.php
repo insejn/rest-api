@@ -36,6 +36,8 @@ if ( ! $requirements->satisfied() ) {
 
 $taxonomies = new AKPRO\CaseStudies\Taxonomies();
 $post_type = new AKPRO\CaseStudies\PostType();
+$roles = new AKPRO\CaseStudies\Roles();
+$roles->add_hooks();
 $fields = new AKPRO\CaseStudies\Fields();
 $fields->add_hooks();
 $api = new AKPRO\CaseStudies\RestApi();

@@ -1,4 +1,3 @@
 *.log
-/vendor
 /composer.lock
 /yarn.lock
