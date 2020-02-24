@@ -54,8 +54,9 @@ class Manager {
 		if(is_wp_error( $post_id )) return $post_id;
 
 		self::update_fields( $post_id, $request );
+		$kategoria[] = $request['kategoria_realizacji'];
+		Taxonomies::set_terms( $post_id, $kategoria, 'kategoria_realizacji');
 		Taxonomies::set_terms( $post_id, $request['tagi'], 'tag_realizacji' );
-		Taxonomies::set_terms( $post_id, $request['kategoria'], 'kategoria_realizacji');
 
 		return $post_id;
 	}
