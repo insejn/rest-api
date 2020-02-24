@@ -5,14 +5,14 @@ use Micropackage\DocHooks\HookAnnotations;
 
 class Roles extends HookAnnotations {
 	/**
-	 * @action init
+	 * @action plugins_loaded 10
 	 */
 	public function register_role() {
 		add_role( 'case_study_logger', 'Case Study Logger' );
 	}
 
 	/**
-	 * @action plugins_loaded
+	 * @action plugins_loaded 15
 	 */
 	public function add_capabilities() {
 		$roles = ['editor', 'administrator', 'case_study_logger'];
