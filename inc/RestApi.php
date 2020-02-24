@@ -61,7 +61,7 @@ class RestApi extends HookAnnotations {
 		$error = new \WP_Error();
 
 		if ( empty( $data ) ) {
-			$error->add( 406, __( 'Post not found', 'rest-api-endpoints' ) );
+			$error->add( 406, __( 'Nie znaleziono posta o podanym ID', 'rest-api-endpoints' ) );
 			return $error;
 		}
 
@@ -107,25 +107,13 @@ class RestApi extends HookAnnotations {
 			return $error;
 		}
 
-		// // Check if the user with this id can publish posts
-		// $user_can_publish_post = user_can( $user_id,'publish_posts' );
-		// if ( ! $user_can_publish_post ) {
-		// 	$error->add(
-		// 		400,
-		// 		__( "Nie masz uprawnień", 'rest-api-endpoints' ),
-		// 		array( 'status' => 400 )
-		// 	);
-
-		// 	return $error;
-		// }
-
 		$post_id = Manager::insert( $params );
 
 		if ( ! is_wp_error( $post_id ) ) {
 			$response['status'] = 200;
 			$response['wp_id'] = $post_id;
 		} else {
-			$error->add( 406, __( 'Post creating failed', 'rest-api-endpoints' ) );
+			$error->add( 406, __( 'Coś poszło nie tak.', 'rest-api-endpoints' ) );
 			return $error;
 		}
 
@@ -172,17 +160,6 @@ class RestApi extends HookAnnotations {
 			$error->add(
 				400,
 				__( "Opis jest wymagany", 'rest-api-endpoints' ),
-				array( 'status' => 400 )
-			);
-
-			return $error;
-		}
-
-		$user_can_publish_post = user_can( $user_id, 'publish_posts' );
-		if ( ! $user_can_publish_post ) {
-			$error->add(
-				400,
-				__( "Nie masz uprawnień", 'rest-api-endpoints' ),
 				array( 'status' => 400 )
 			);
 
